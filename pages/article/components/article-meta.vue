@@ -21,13 +21,14 @@
     </div>
     <button
       class="btn btn-sm btn-outline-secondary"
+      :disabled="user && user.username == article.author.username"
       :class="{
         active: article.author.following
       }"
     >
       <i class="ion-plus-round"></i>
       &nbsp;
-      Follow Eric Simons <span class="counter">(10)</span>
+      Follow {{article.author.username}} <span class="counter">({{article.author.bio || 0}})</span>
     </button>
     &nbsp;&nbsp;
     <button
@@ -38,12 +39,14 @@
     >
       <i class="ion-heart"></i>
       &nbsp;
-      Favorite Post <span class="counter">(29)</span>
+      Favorite Post <span class="counter">({{article.favoritesCount}})</span>
     </button>
   </div>
 </template>
 
 <script>
+import { mapState }  from 'vuex';
+
 export default {
   name: 'ArticleMeta',
   props: {
@@ -51,6 +54,9 @@ export default {
       type: Object,
       required: true
     }
+  },
+  computed: {
+    ...mapState(['user'])
   }
 }
 </script>
