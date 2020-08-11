@@ -56,6 +56,24 @@ export const getArticle = slug => {
   })
 }
 
+// 删除文章
+export const delArticle = slug => {
+  return request({
+    method: 'DELETE',
+    url: `/api/articles/${slug}`
+  })
+}
+
+
+// 修改文章
+export const modifyArticle = (slug, data) => {
+  return request({
+    method: 'PUT',
+    url: `/api/articles/${slug}`,
+    data,
+  })
+}
+
 // 获取文章评论
 export const getComments = slug => {
   return request({
@@ -74,4 +92,10 @@ export const publishComments = (slug, data) => {
   })
 }
 
-
+// 删除评论
+export const delComment = (slug, id) => {
+  return request({
+    method: 'DELETE',
+    url: `/api/articles/${slug}/comments/${id}`,
+  })
+}

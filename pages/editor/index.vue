@@ -31,13 +31,16 @@
 </template>
 
 <script>
-import { publishArticle } from '@/api/article';
+import { publishArticle, getArticle, modifyArticle } from '@/api/article';
+import { mapState } from 'vuex';
+
 export default {
   // 在路由匹配组件渲染之前会先执行中间件处理
   middleware: 'authenticated',
   name: 'EditorIndex',
   data() {
     return {
+      slug: this.$route.query.slug,
       article: {
           "title": "",
           "description": "",
@@ -46,9 +49,36 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState(['user'])
+  },
+  created() {
+    this.init();
+  },
   methods: {
     async publish() {
-      await publishArticle(this.article);
+      if(this.slug ){
+        await modifyArticle(this.slug, this.article);
+      }else {
+        const { data } = await publishArticle(this.article);
+        this.slug = data.article.slug;
+      }
+      this.$router.replace({
+        path: '/article/' + this.slug
+      })
+    },
+    init(){
+      if(this.slug){
+        this.getDetail();
+      }
+    },
+    async getDetail() {
+      const { data } = await getArticle(this.slug);
+      const { article } = data;
+      Object.keys(this.article).forEach(key => {
+        this.article[key] = article[key];
+      })
+      console.log(data);
     }
   }
 }

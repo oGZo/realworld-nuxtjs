@@ -17,7 +17,7 @@
       </div>
     </form>
 
-    <div class="card" v-for="comment in comments" :key="comment.id">
+    <div class="card" v-for="(comment, i) in comments" :key="comment.id">
       <div class="card-block">
         <p class="card-text">{{ comment.body }}</p>
       </div>
@@ -48,39 +48,49 @@
         <span class="date-posted">{{
           comment.createdAt | date("MMM DD, YYYY")
         }}</span>
+        <span
+          class="mod-options"
+          v-if="user && user.username == comment.author.username"
+        >
+          <i class="ion-trash-a" @click="delComment(comment.id, i)"></i>
+        </span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getComments, publishComments } from '@/api/article'
+import { getComments, publishComments , delComment } from "@/api/article";
+import { mapState } from 'vuex';
 
 export default {
-  name: 'ArticleComments',
+  name: "ArticleComments",
   props: {
     article: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
-  data () {
+  data() {
     return {
       disabled: false,
       comment: {
-        body: ''
+        body: "",
       },
-      comments: [] // 文章列表
-    }
+      comments: [], // 文章列表
+    };
   },
-  async mounted () {
+  computed: {
+    ...mapState(['user'])
+  },
+  async mounted() {
     this.getComments();
   },
   methods: {
     async publish() {
       this.disabled = true;
       try {
-        let res = await publishComments(this.article.slug, this.comment)
+        let res = await publishComments(this.article.slug, this.comment);
         console.log(res);
         this.comments.unshift(res.data.comment);
       } catch (error) {
@@ -89,11 +99,15 @@ export default {
       this.disabled = false;
     },
     async getComments() {
-      const { data } = await getComments(this.article.slug)
-    this.comments = data.comments
+      const { data } = await getComments(this.article.slug);
+      this.comments = data.comments;
+    },
+    async delComment(id, i) {
+      await delComment(this.article.slug, id);
+      this.comments.splice(i, 1);
     }
-  }
-}
+  },
+};
 </script>
 
 <style></style>
