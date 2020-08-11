@@ -1,11 +1,11 @@
-const cookieparser = process.server ? require('cookieparser') : undefined
+const cookieparser = process.server ? require('cookieparser') : require('js-cookie')
 
 // 在服务端渲染期间运行都是同一个实例
 // 为了防止数据冲突，务必要把 state 定义成一个函数，返回数据对象
 export const state = () => {
   return {
     // 当前登录用户的登录状态
-    user: null
+    user: process.client ? JSON.parse(cookieparser.get('user') || 'null') : null
   }
 }
 
@@ -23,7 +23,7 @@ export const actions = {
     let user = null
 
     // 如果请求头中有 Cookie
-    if (req.headers.cookie) {
+    if (req && req.headers.cookie) {
       // 使用 cookieparser 把 cookie 字符串转为 JavaScript 对象
       const parsed = cookieparser.parse(req.headers.cookie)
       try {

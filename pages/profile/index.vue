@@ -44,6 +44,7 @@
                 :to="{
                   path: $route.path,
                   query: {
+                    ...$route.query,
                     tab: ta.id,
                     page: 1,
                   },
@@ -103,12 +104,12 @@ import { mapState } from "vuex";
 
 export default {
   middleware: "authenticated",
-  name: "UserProfile",
+  name: "profile",
   components: {
     ArticleItem,
   },
   watchQuery: ["page", 'tab'],
-  async asyncData({ params, query }) {
+  async asyncData({ query }) {
     let page = Number.parseInt(query.page) || 1;
     let limit = 5;
     let offset = (page - 1) * limit;
@@ -120,10 +121,10 @@ export default {
     };
     let getArticle =
       tab == "favorite"
-        ? getArticles({ ...param, favorited: params.username })
-        : getArticles({ ...param, author: params.username });
+        ? getArticles({ ...param, favorited: query.username })
+        : getArticles({ ...param, author: query.username });
     let [{ data }, { data: articles }] = await Promise.all([
-      getProfiles(params.username),
+      getProfiles(query.username),
       getArticle,
     ]);
     console.log(data);
@@ -178,18 +179,6 @@ export default {
       } finally {
         this.disabledFollow = false;
       }
-    },
-    changeTab(tab) {
-      this.tab = tab.id;
-      this.page = 1;
-      this.$router.push({
-        path: this.$route.path,
-        query: {
-          // ...this.$route.query,
-          tab: tab.id,
-          page: 1,
-        },
-      });
     },
   },
 };

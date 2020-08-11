@@ -51,7 +51,7 @@ const Cookie = process.client ? require('js-cookie') : undefined
 
 export default {
   middleware: 'notAuthenticated',
-  name: 'LoginIndex',
+  name: 'RegisterIndex',
   computed: {
     isLogin () {
       return this.$route.name === 'login'
@@ -61,8 +61,8 @@ export default {
     return {
       user: {
         username: '',
-        email: '',
-        password: ''
+        email: 'lpzmail@163.com',
+        password: '12345678'
       },
       errors: {} // 错误信息
     }

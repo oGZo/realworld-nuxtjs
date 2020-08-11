@@ -135,7 +135,7 @@ import { getTags } from '@/api/tag'
 import { mapState } from 'vuex'
 
 export default {
-  name: 'HomeIndex',
+  name: 'home',
   components: {
     ArticleItem,
   },

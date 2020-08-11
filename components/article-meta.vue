@@ -1,11 +1,8 @@
 <template>
-  <div class="article-meta">
+  <div class="article-meta" v-if="article.author">
     <nuxt-link
       :to="{
-        name: 'profile',
-        params: {
-          username: article.author.username,
-        },
+        path: `/profile?username=${article.author.username}`,
       }"
     >
       <img :src="article.author.image" />
@@ -14,10 +11,7 @@
       <nuxt-link
         class="author"
         :to="{
-          name: 'profile',
-          params: {
-            username: article.author.username,
-          },
+          path: `/profile?username=${article.author.username}`,
         }"
       >
         {{ article.author.username }}

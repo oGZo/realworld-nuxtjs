@@ -36,7 +36,7 @@
               </nuxt-link>
             </li>
             <li class="nav-item">
-              <nuxt-link class="nav-link" :to="`/profile/${user.username}`">
+              <nuxt-link class="nav-link" :to="`/profile?username=${user.username}`">
                 <img
                   class="user-pic"
                   :src="user.image"

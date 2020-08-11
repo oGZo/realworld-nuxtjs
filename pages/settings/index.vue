@@ -102,7 +102,7 @@ export default {
 
       // 为了防止刷新页面数据丢失，我们需要把数据持久化
       Cookie.set("user", data.user);
-      this.$router.replace(`/profile/${data.user.username}`);
+      this.$router.replace(`/profile?username=${data.user.username}`);
       console.log("ok");
     },
     logout() {

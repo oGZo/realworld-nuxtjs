@@ -64,7 +64,7 @@ export default {
         this.slug = data.article.slug;
       }
       this.$router.replace({
-        path: '/article/' + this.slug
+        path: '/article?slug=' + this.slug
       })
     },
     init(){

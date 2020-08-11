@@ -41,18 +41,24 @@
 <script>
 import { getArticle } from '@/api/article'
 import MarkdownIt from 'markdown-it'
-import ArticleMeta from './components/article-meta'
-import ArticleComments from './components/article-comments'
+import ArticleMeta from '@/components/article-meta.vue'
+import ArticleComments from '@/components/article-comments.vue'
 
 export default {
-  name: 'ArticleIndex',
-  async asyncData ({ params }) {
-    const { data } = await getArticle(params.slug)
+  name: 'article',
+  async asyncData ({ query }) {
+    if(!query.slug)return;
+    const { data } = await getArticle(query.slug)
     const { article } = data
     const md = new MarkdownIt()
     article.body = md.render(article.body)
     return {
       article
+    }
+  },
+  data() {
+    return {
+      article: {}
     }
   },
   components: {

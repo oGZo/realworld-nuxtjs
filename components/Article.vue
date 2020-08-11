@@ -1,12 +1,9 @@
 <template>
-  <div class="article-preview">
+  <div class="article-preview" v-if="article.author">
     <div class="article-meta">
       <nuxt-link
         :to="{
-          name: 'profile',
-          params: {
-            username: article.author.username,
-          },
+          path: `/profile?username=${article.author.username}`,
         }"
       >
         <img :src="article.author.image" />
@@ -15,10 +12,7 @@
         <nuxt-link
           class="author"
           :to="{
-            name: 'profile',
-            params: {
-              username: article.author.username,
-            },
+            path: `/profile?username=${article.author.username}`,
           }"
         >
           {{ article.author.username }}
@@ -39,10 +33,7 @@
     <nuxt-link
       class="preview-link"
       :to="{
-        name: 'article',
-        params: {
-          slug: article.slug,
-        },
+        path: `/article?slug=${article.slug}`,
       }"
     >
       <h1>{{ article.title }}</h1>
