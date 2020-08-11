@@ -4,6 +4,9 @@
 
 module.exports = {
   mode: 'spa',
+  build: {
+    publicPath: '/realworld-nuxtjs/'
+  },
   router: {
     linkActiveClass: 'active',
     mode: 'hash',
