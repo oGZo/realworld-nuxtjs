@@ -5,7 +5,7 @@
 module.exports = {
   mode: 'spa',
   build: {
-    publicPath: '/realworld-nuxtjs/'
+    publicPath: '//ogzo.gitee.io/realworld-nuxtjs/'
   },
   router: {
     linkActiveClass: 'active',
