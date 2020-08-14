@@ -105,11 +105,21 @@ export default {
       this.$router.replace(`/profile?username=${data.user.username}`);
       console.log("ok");
     },
-    logout() {
+    async logout() {
+      await this.$confirm("确认退出登录吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        this.$message({
+          type: "success",
+          message: "退出成功!",
+        });
+      });
       this.$store.commit("setUser", null);
       Cookie.remove("user");
-      this.$router.replace('/');
-    }
+      this.$router.replace("/");
+    },
   },
 };
 </script>

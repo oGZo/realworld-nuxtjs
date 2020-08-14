@@ -50,7 +50,7 @@
                   },
                 }"
               >
-                <span class="nav-link" :class="{ active:  ta.id == tab }">{{
+                <span class="nav-link" :class="{ active: ta.id == tab }">{{
                   ta.name
                 }}</span>
               </nuxt-link>
@@ -64,7 +64,15 @@
             :key="i"
           />
           <div class="col-md-3">
-            <nav>
+            <el-pagination
+              v-if="totalPage > 1"
+              :page-size="limit"
+              layout="prev, pager, next"
+              @current-change="pageChange"
+              :total="articlesCount"
+            >
+            </el-pagination>
+            <!-- <nav>
               <ul class="pagination" v-if="totalPage > 1">
                 <li
                   class="page-item"
@@ -87,7 +95,7 @@
                   >
                 </li>
               </ul>
-            </nav>
+            </nav> -->
           </div>
         </div>
       </div>
@@ -179,6 +187,16 @@ export default {
       } finally {
         this.disabledFollow = false;
       }
+    },
+    pageChange(page) {
+      this.loadStatus = 0;
+      this.$router.replace({
+        name: this.$route.name,
+        query: {
+          ...this.$route.query,
+          page,
+        },
+      });
     },
   },
 };

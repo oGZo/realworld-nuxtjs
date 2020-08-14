@@ -16,8 +16,12 @@
     "axios": "^0.19.2",
     "cookieparser": "^0.1.0",
     "dayjs": "^1.8.28",
+    "element-ui": "^2.13.2",
     "js-cookie": "^2.2.1",
     "markdown-it": "^11.0.0",
     "nuxt": "^2.12.2"
+  },
+  "devDependencies": {
+    "babel-plugin-component": "^1.1.1"
   }
 }

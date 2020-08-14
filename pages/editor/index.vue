@@ -16,9 +16,11 @@
                   <textarea class="form-control" rows="8" v-model="article.body" placeholder="Write your article (in markdown)" required></textarea>
               </fieldset>
               <fieldset class="form-group">
-                  <input type="text" class="form-control" v-model="article.tagList" placeholder="Enter tags"><div class="tag-list"></div>
+                <el-select v-model="article.tagList" multiple placeholder="Enter tags" class="form-control" >
+                  <el-option v-for="tag in allTag" :key="tag" v-if="tag && tag.trim()" :value="tag" :label="tag" />
+                </el-select>
               </fieldset>
-              <button class="btn btn-lg pull-xs-right btn-primary" >
+              <button class="btn btn-lg pull-xs-right btn-primary" :disabled="disabled">
                   Publish Article
               </button>
             </fieldset>
@@ -33,6 +35,7 @@
 <script>
 import { publishArticle, getArticle, modifyArticle } from '@/api/article';
 import { mapState } from 'vuex';
+import { getTags } from '@/api/tag';
 
 export default {
   // 在路由匹配组件渲染之前会先执行中间件处理
@@ -40,7 +43,9 @@ export default {
   name: 'EditorIndex',
   data() {
     return {
+      disabled: false,
       slug: this.$route.query.slug,
+      allTag: [],
       article: {
           "title": "",
           "description": "",
@@ -57,12 +62,15 @@ export default {
   },
   methods: {
     async publish() {
+      const { article } = this;
+      this.disabled = true;
       if(this.slug ){
-        await modifyArticle(this.slug, this.article);
+        await modifyArticle(this.slug, { article} );
       }else {
-        const { data } = await publishArticle(this.article);
+        const { data } = await publishArticle({article});
         this.slug = data.article.slug;
       }
+      this.disabled = false;
       this.$router.replace({
         path: '/article?slug=' + this.slug
       })
@@ -71,6 +79,11 @@ export default {
       if(this.slug){
         this.getDetail();
       }
+      this.getTags();
+    },
+    async getTags() {
+      const { data: { tags } } = await getTags();
+      this.allTag = tags.reverse();
     },
     async getDetail() {
       const { data } = await getArticle(this.slug);

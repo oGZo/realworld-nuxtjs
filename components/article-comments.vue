@@ -11,7 +11,7 @@
       </div>
       <div class="card-footer">
         <img src="http://i.imgur.com/Qr71crq.jpg" class="comment-author-img" />
-        <button class="btn btn-sm btn-primary">
+        <button class="btn btn-sm btn-primary" :disabled="disabled">
           Post Comment
         </button>
       </div>
@@ -103,6 +103,16 @@ export default {
       this.comments = data.comments;
     },
     async delComment(id, i) {
+      await this.$confirm('此操作将删除该评论, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        })
       await delComment(this.article.slug, id);
       this.comments.splice(i, 1);
     }

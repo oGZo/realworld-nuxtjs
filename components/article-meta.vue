@@ -36,7 +36,8 @@
         }"
       >
         <i class="ion-plus-round"></i>
-        &nbsp; {{article.author.following ? 'Unf' : 'F'}}ollow {{ article.author.username }}
+        &nbsp; {{ article.author.following ? "Unf" : "F" }}ollow
+        {{ article.author.username }}
         <span class="counter">({{ article.author.bio || 0 }})</span>
       </button>
       &nbsp;&nbsp;
@@ -48,7 +49,7 @@
         }"
       >
         <i class="ion-heart"></i>
-        &nbsp; {{article.favorited ? 'Unf' : 'F'}}avorite Article
+        &nbsp; {{ article.favorited ? "Unf" : "F" }}avorite Article
         <span class="counter">({{ article.favoritesCount }})</span>
       </button>
     </template>
@@ -57,8 +58,8 @@
 
 <script>
 import { mapState } from "vuex";
-import { addFavorite, deleteFavorite , delArticle } from '@/api/article';
-import { follow, unFollow } from '@/api/follow';
+import { addFavorite, deleteFavorite, delArticle } from "@/api/article";
+import { follow, unFollow } from "@/api/follow";
 
 export default {
   name: "ArticleMeta",
@@ -75,48 +76,62 @@ export default {
     return {
       favoriteDisabled: false,
       followDisabled: false,
-    }
+    };
   },
   methods: {
     edit() {
       this.$router.push({
-        path: '/editor',
+        path: "/editor",
         query: {
-          slug:this.article.slug
-        }
-      })
+          slug: this.article.slug,
+        },
+      });
     },
     async del() {
+      await this.$confirm("此操作将删除该评论, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        this.$message({
+          type: "success",
+          message: "删除成功!",
+        });
+      });
       await delArticle(this.article.slug);
-      this.$router.push({
-        path: `/profile/${this.article.author.username}`,
-      })
+      this.$router.replace({
+        path: `/profile?username=${this.article.author.username}`,
+      });
     },
-    async favoriteFun(){
-      this.favoriteDisabled =  true;
+    async favoriteFun() {
+      this.favoriteDisabled = true;
       let { article } = this;
       let favoriteFn = article.favorited ? deleteFavorite : addFavorite;
-      await favoriteFn(this.article.slug).then(() => {
-        if(article.favorited){
-          article.favoritesCount -= 1;
-        }else {
-          article.favoritesCount += 1;
-        }
-        article.favorited = !article.favorited;
-      }).finally(() => {
-        this.favoriteDisabled =  false;
-      });
+      await favoriteFn(this.article.slug)
+        .then(() => {
+          if (article.favorited) {
+            article.favoritesCount -= 1;
+          } else {
+            article.favoritesCount += 1;
+          }
+          article.favorited = !article.favorited;
+        })
+        .finally(() => {
+          this.favoriteDisabled = false;
+        });
     },
     async followFun() {
-      this.followDisabled =  true;
+      this.followDisabled = true;
       let { author } = this.article;
       let followFun = author.following ? unFollow : follow;
-      await followFun(author.username).then(() => {
-        author.following = !author.following;
-      }).finally(() => {
-        this.followDisabled =  false;
-      });
-    }
+      await followFun(author.username)
+        .then(() => {
+          author.following = !author.following;
+        })
+        .finally(() => {
+          this.followDisabled = false;
+        });
+    },
   },
 };
 </script>
